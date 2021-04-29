@@ -1,31 +1,142 @@
 const { app } = require('./core'); 
-const { db, sse } = require('./db')
+const { db, sse, update } = require('./db')
 
-// let devices = db.get('devices').value();
+/* CODE YOUR API HERE */
+
+let devices = db.get('devices');
 
 
-app.get('/devices', (req, res) => {
-    let devices = db.get('devices').value();
-    res.send(JSON.stringify({ devices: devices }));
+/* ------------------------------LIGHT-------------------------------- */
+
+app.get('/light/:id/:state', (req, res) => {
+
+    // let type = req.params.type;
+    let id = req.params.id;
+    let state = req.params.state;
+
+    if(state === 'on'){    
+        let device = devices.find(device => device.id === id) 
+    .assign({on : true,
+            // brightness: req.query.brightness,
+        }).value()
+
+    update();
+    res.send(`${device.type} in ${device.name} is on`)
+    
+    } else {
+        let device = devices.find(device => device.id === id) 
+        .assign({on : false}).value()
+    
+        update();
+
+        res.send(`${device.type} in ${device.name} is ${device.state}`)
+    }
 })
 
+/* ------------------------------AC-------------------------------- */
 
-// db.get('devices').value();
+app.get('/ac/:id/:state', (req, res) => {
 
-// update();
+    // let type = req.params.type;
+    let id = req.params.id;
+    let state = req.params.state;
 
-app.get('/devices/:id', (req, res) => {
-    let devices = db.get('devices').value();
-    let id = parseInt(req.params.id);
-    let results = devices.filter(device => device.id === id);
-    console.log(results);
-    console.log(results[0]);
-    res.send(JSON.stringify({ device: results[0] }));
+    if(state === 'on'){    
+        let device = devices.find(device => device.id === id) 
+    .assign({on : true}).value()
 
+    update();
+    res.send(`${device.type} in ${device.name} is on`)
+    
+    } else {
+        let device = devices.find(device => device.id === id) 
+        .assign({on : false}).value()
+    
+        update();
+
+        res.send(`${device.type} in ${device.name} is ${device.state}`)
+    }
 })
+
+/* ------------------------------BLIND-------------------------------- */
+
+app.get('/blind/:id/:state', (req, res) => {
+
+    // let type = req.params.type;
+    let id = req.params.id;
+    let state = req.params.state;
+
+    if(state === 'down'){    
+        let device = devices.find(device => device.id === id) 
+    .assign({on : true}).value()
+
+    update();
+    res.send(`${device.type} in ${device.name} is down`)
+    
+    } else {
+        let device = devices.find(device => device.id === id) 
+        .assign({on : false}).value()
+    
+        update();
+
+        res.send(`${device.type} in ${device.name} is up`)
+    }
+})
+
+/* ------------------------------CAMERA-------------------------------- */
+
+app.get('/camera/:id/:state', (req, res) => {
+
+    // let type = req.params.type;
+    let id = req.params.id;
+    let state = req.params.state;
+
+    if(state === 'filming'){    
+        let device = devices.find(device => device.id === id) 
+    .assign({on : true}).value()
+
+    update();
+    res.send(`${device.type} in ${device.name} is filming`)
+    
+    } else {
+        let device = devices.find(device => device.id === id) 
+        .assign({on : false}).value()
+    
+        update();
+
+        res.send(`${device.type} in ${device.name} is faking`)
+    }
+})
+
+/* ------------------------------LOCK-------------------------------- */
+
+app.get('/lock/:id/:code', (req, res) => {
+
+    // let type = req.params.type;
+    let id = req.params.id;
+    let code = req.params.code;
+    let locked = req.params.locked
+
+    if(code === 1234 || locked === true){    
+        let device = devices.find(device => device.id === id) 
+    .assign({locked : false}).value()
+
+    update();
+    res.send(`${device.type} is locked`)
+    
+    } else {
+        let device = devices.find(device => device.id === id) 
+        .assign({locked : true}).value()
+    
+        update();
+
+        res.send(`${device.type} is open`)
+    }
+})
+
 
 app.listen(3000, () => {
     console.log('API for smart home 1.1 up n running.')
 })
 
-/* CODE YOUR API HERE */
+
