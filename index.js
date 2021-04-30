@@ -5,132 +5,213 @@ const { db, sse, update } = require('./db')
 
 let devices = db.get('devices');
 
-
 /* ------------------------------LIGHT-------------------------------- */
 
-app.get('/light/:id/:state', (req, res) => {
+app.get('/light/:id/:on', (req, res) => {
 
-    // let type = req.params.type;
     let id = req.params.id;
-    let state = req.params.state;
+    let on = req.params.on;
 
-    if(state === 'on'){    
+    if(on === 'on'){    
         let device = devices.find(device => device.id === id) 
     .assign({on : true,
             // brightness: req.query.brightness,
         }).value()
 
     update();
+
     res.send(`${device.type} in ${device.name} is on`)
     
-    } else {
+    } else if (on === 'off'){
         let device = devices.find(device => device.id === id) 
         .assign({on : false}).value()
     
         update();
 
         res.send(`${device.type} in ${device.name} is ${device.state}`)
+    }else {
+        res.send(`Wrong input. Please enter 'on' or 'off'.`)
     }
 })
 
 /* ------------------------------AC-------------------------------- */
 
-app.get('/ac/:id/:state', (req, res) => {
+app.get('/ac/:id/:on', (req, res) => {
 
-    // let type = req.params.type;
     let id = req.params.id;
-    let state = req.params.state;
+    let on = req.params.on;
 
-    if(state === 'on'){    
+    if(on === 'on'){    
         let device = devices.find(device => device.id === id) 
-    .assign({on : true}).value()
+    .assign({on : true,
+            temperature: req.query.temperature}).value()
 
     update();
-    res.send(`${device.type} in ${device.name} is on`)
+
+        res.send(`${device.type} in ${device.name} is on`);
+
+    // if(JSON.stringify(req.query) == {}){
+    //     res.send(`${device.type} in ${device.name} is on`);
+    // }else{
+    //     res.send(`${device.type} in ${device.name} is on with a temperature of ${req.query.temperature} degrees.`)
+    // }
     
-    } else {
+    
+    } else if(on === 'off') {
         let device = devices.find(device => device.id === id) 
         .assign({on : false}).value()
     
         update();
 
         res.send(`${device.type} in ${device.name} is ${device.state}`)
+    } else{
+
+        res.send(`Wrong input. Please enter 'on' or 'off'.`)
     }
 })
 
 /* ------------------------------BLIND-------------------------------- */
 
-app.get('/blind/:id/:state', (req, res) => {
+app.get('/blind/:id/:on', (req, res) => {
 
-    // let type = req.params.type;
     let id = req.params.id;
-    let state = req.params.state;
+    let on = req.params.on;
 
-    if(state === 'down'){    
+    if(on === 'on'){    
         let device = devices.find(device => device.id === id) 
     .assign({on : true}).value()
 
     update();
     res.send(`${device.type} in ${device.name} is down`)
     
-    } else {
+    } else if(on === 'off') {
         let device = devices.find(device => device.id === id) 
         .assign({on : false}).value()
     
         update();
 
         res.send(`${device.type} in ${device.name} is up`)
+    } else{
+
+        res.send(`Wrong input. Please enter 'on' or 'off'.`)
     }
 })
 
 /* ------------------------------CAMERA-------------------------------- */
 
-app.get('/camera/:id/:state', (req, res) => {
+app.get('/camera/:id/:on', (req, res) => {
 
-    // let type = req.params.type;
     let id = req.params.id;
-    let state = req.params.state;
+    let on = req.params.on;
 
-    if(state === 'filming'){    
+    if(on === 'on'){    
         let device = devices.find(device => device.id === id) 
     .assign({on : true}).value()
 
     update();
-    res.send(`${device.type} in ${device.name} is filming`)
+    res.send(`${device.type} at ${device.name} is filming`)
     
-    } else {
+    } else if (on === 'off'){
         let device = devices.find(device => device.id === id) 
         .assign({on : false}).value()
     
         update();
 
-        res.send(`${device.type} in ${device.name} is faking`)
+        res.send(`${device.type} at ${device.name} is off`)
+    } else{
+
+        res.send(`Wrong input. Please enter 'on' or 'off'.`)
     }
 })
 
 /* ------------------------------LOCK-------------------------------- */
 
-app.get('/lock/:id/:code', (req, res) => {
+app.get('/lock/:id/:on', (req, res) => {
 
-    // let type = req.params.type;
     let id = req.params.id;
-    let code = req.params.code;
-    let locked = req.params.locked
+    let on = req.params.on;
 
-    if(code === 1234 || locked === true){    
+    if(on === 'unlock'){    
         let device = devices.find(device => device.id === id) 
-    .assign({locked : false}).value()
+    .assign({locked : true}).value()
 
     update();
-    res.send(`${device.type} is locked`)
-    
-    } else {
+    res.send(`${device.type} at ${device.name} is unlocked`)
+        
+    } else if (on == 'lock'){
         let device = devices.find(device => device.id === id) 
-        .assign({locked : true}).value()
+        .assign({locked : false}).value()
     
         update();
 
-        res.send(`${device.type} is open`)
+        res.send(`${device.type} at ${device.name} is locked`)
+    }else {
+
+        res.send(`Wrong input. Please enter 'unlock' or 'lock'.`)
+    }
+})
+
+
+/* ------------------------------VACUUM-------------------------------- */
+
+app.get('/vacuum/:id/:on', (req, res) => {
+
+    let id = req.params.id;
+    let on = req.params.on;
+
+    if(on === 'on'){    
+        let device = devices.find(device => device.id === id) 
+    .assign({on : true}).value()
+
+    update();
+
+    res.send(`${device.type} ${device.name} is cleaning`)
+    
+    // }else if(state === 'charging'){
+    //     let device = devices.find(device => device.id === id) 
+    // .assign({on : true}).value()
+
+    // update();
+
+    // res.send(`${device.type} in ${device.name} is charging`)
+
+    }else if(state === 'off') {
+        let device = devices.find(device => device.id === id) 
+        .assign({on : false}).value()
+    
+        update();
+
+        res.send(`${device.type} in ${device.name} is off`)
+    }else{
+
+        res.send(`Wrong input. Please enter 'on' or 'off'.`)
+    }
+})
+
+/* ------------------------------SPEAKER-------------------------------- */
+
+app.get('/speaker/:id/:on', (req, res) => {
+
+    let id = req.params.id;
+    let on = req.params.on;
+
+    if(on === 'on'){    
+        let device = devices.find(device => device.id === id) 
+    .assign({on : true}).value()
+
+    update();
+    res.send(`${device.type} in ${device.name} is playing`)
+    
+    }else if(on === 'off'){
+        let device = devices.find(device => device.id === id) 
+    .assign({on : false}).value()
+
+    update();
+
+    res.send(`${device.type} in ${device.name} is silent`)
+    }else {
+
+        res.send(`Wrong input. Please enter 'on' or 'off'.`)
     }
 })
 
