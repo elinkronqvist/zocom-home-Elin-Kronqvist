@@ -41,6 +41,7 @@ app.get('/light/:id/:on', (req, res) => {
          let device = devices.find(device => device.id === id)
         .assign({on : false}).value()
     
+        //Här skickar vi till frontend att statet ska uppdateras. Vi får då tillbaka ett promise. 
         update();
 
         //Här skickar vi vårt response
@@ -71,13 +72,6 @@ app.get('/ac/:id/:on', (req, res) => {
 
         res.send(`${device.type} in ${device.name} is on`);
 
-    // if(JSON.stringify(req.query) == {}){
-    //     res.send(`${device.type} in ${device.name} is on`);
-    // }else{
-    //     res.send(`${device.type} in ${device.name} is on with a temperature of ${req.query.temperature} degrees.`)
-    // }
-    
-    
     } else if(on === 'off') {
         
         let device = devices.find(device => device.id === id)
@@ -135,6 +129,7 @@ app.get('/camera/:id/:on', (req, res) => {
         .assign({on : true}).value()
 
         update();
+
         res.send(`${device.type} at ${device.name} is filming`)
         
     } else if (on === 'off'){
@@ -145,6 +140,7 @@ app.get('/camera/:id/:on', (req, res) => {
         update();
 
         res.send(`${device.type} at ${device.name} is off`)
+
     } else{
 
         res.send(`Wrong input. Please enter 'on' or 'off'.`)
@@ -198,14 +194,6 @@ app.get('/vacuum/:id/:on', (req, res) => {
         update();
 
         res.send(`${device.type} ${device.name} is cleaning`)
-    
-    // }else if(state === 'charging'){
-    //     let device = devices.find(device => device.id === id) 
-    // .assign({on : true}).value()
-
-    // update();
-
-    // res.send(`${device.type} in ${device.name} is charging`)
 
     }else if(state === 'off') {
         
