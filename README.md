@@ -39,9 +39,11 @@ http://localhost:3000/light/LIG1/on
 Turn off the lamp:
 http://localhost:3000/light/LIG1/off
 
+If you would like to change the brightness please enter a number between 0-1, as a query.
+
 --------------------------------------------------------
 
-Light Bedroom:
+Light Living room:
 id: LIG2
 
 Turn on the lamp:
@@ -50,9 +52,11 @@ http://localhost:3000/light/LIG2/on
 Turn off the lamp:
 http://localhost:3000/light/LIG2/off
 
+If you would like to change the brightness please enter a number between 0-1, as a query.
+
 --------------------------------------------------------
 
-Light Bedroom:
+Light Garden:
 id: LIG3
 
 Turn on the lamp:
@@ -60,6 +64,8 @@ http://localhost:3000/light/LIG3/on
 
 Turn off the lamp:
 http://localhost:3000/light/LIG3/off
+
+If you would like to change the brightness please enter a number between 0-1, as a query.
 
 --------------------------------------------------------
 
